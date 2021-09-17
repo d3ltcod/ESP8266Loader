@@ -1,8 +1,15 @@
 package modulestruct;
 
-import esp8266loader.Constants;
+import java.io.IOException;
 
-public class Segment {
+import esp8266loader.Constants;
+import ghidra.app.util.bin.StructConverter;
+import ghidra.program.model.data.DataType;
+import ghidra.program.model.data.Structure;
+import ghidra.program.model.data.StructureDataType;
+import ghidra.util.exception.DuplicateNameException;
+
+public class Segment implements StructConverter{
 	private int offset;
 	private int size;
 	private byte[] content;
@@ -46,6 +53,17 @@ public class Segment {
 			result = "uknown";
 			
 		return result;
+	}
+
+	@Override
+	public DataType toDataType() throws DuplicateNameException, IOException {
+		Structure structure = new StructureDataType("header_item", 0);
+		
+		structure.add(DWORD, 1, "offset", "Starting offset of the section");
+		structure.add(DWORD, 1, "size", "Size of the section");
+		structure.add(BYTE, size, "content", "Contents of the section");
+		
+		return structure;
 	}
 	
 }

@@ -1,6 +1,14 @@
 package modulestruct;
 
-public class Header {
+import java.io.IOException;
+
+import ghidra.app.util.bin.StructConverter;
+import ghidra.program.model.data.DataType;
+import ghidra.program.model.data.Structure;
+import ghidra.program.model.data.StructureDataType;
+import ghidra.util.exception.DuplicateNameException;
+
+public class Header implements StructConverter{
 	
 	private byte magic;
 	private byte segments;
@@ -35,6 +43,19 @@ public class Header {
 
 	public long getEntrypoint() {
 		return entrypoint;
+	}
+
+	@Override
+	public DataType toDataType() throws DuplicateNameException, IOException {
+		Structure structure = new StructureDataType("header_item", 0);
+		
+		structure.add(BYTE, 1, "magic", null);
+		structure.add(BYTE, 1, "segments", "Number of segments");
+		structure.add(BYTE, 1, "flash_mode", null);
+		structure.add(BYTE, 1, "flash_size_free", null);
+		structure.add(DWORD, 4, "entrypoint", "The entry function");
+		
+		return structure;
 	}
 	
 }
