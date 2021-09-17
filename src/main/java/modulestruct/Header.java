@@ -1,8 +1,5 @@
 package modulestruct;
 
-import java.io.IOException;
-import ghidra.app.util.bin.BinaryReader;
-
 public class Header {
 	
 	private byte magic;
@@ -10,13 +7,14 @@ public class Header {
 	private byte flash_mode;
 	private byte flash_size_free;
 	private long entrypoint;
-	
-	public Header(BinaryReader reader) throws IOException {
-		this.magic = reader.readNextByte();
-		this.segments = reader.readNextByte();
-		this.flash_mode = reader.readNextByte();
-		this.flash_size_free = reader.readNextByte();
-		this.entrypoint = reader.readNextInt();
+
+	public Header(byte magic, byte segments, byte flash_mode, byte flash_size_free, long entrypoint) {
+		super();
+		this.magic = magic;
+		this.segments = segments;
+		this.flash_mode = flash_mode;
+		this.flash_size_free = flash_size_free;
+		this.entrypoint = entrypoint;
 	}
 
 	public byte getMagic() {
