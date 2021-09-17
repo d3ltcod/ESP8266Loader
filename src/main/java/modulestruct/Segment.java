@@ -38,8 +38,6 @@ public class Segment {
 			result="IROM";
 		else if(loadAddress >= Constants.SPI_FLASH_START && loadAddress < Constants.SPI_FLASH_END)
 			result="SPI_FLASH";
-		else if(loadAddress >= Constants.SPI_FLASH_START && loadAddress < Constants.SPI_FLASH_END)
-			result="SPI_FLASH";
 		else if(loadAddress >= Constants.IRAM_MAP_START && loadAddress < Constants.SPI_FLASH_START)
 			result="IRAM";
 		else if(loadAddress >= Constants.DRAM_MAP_START && loadAddress < Constants.DRAM_MAP_END)
