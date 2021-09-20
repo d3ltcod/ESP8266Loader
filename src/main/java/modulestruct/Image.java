@@ -37,7 +37,9 @@ public class Image {
 	
 	private void stepsForImageV2() throws IOException {
 		this.reader.setPointerIndex((0x1000 + 8));
-		segments.add(readSegment());
+		Segment s = readSegment();
+		s.setOffset(Constants.IROM_START+8);
+		segments.add(s);
 	}
 	
 	private Header readHeader() throws IOException {

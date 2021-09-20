@@ -27,6 +27,11 @@ public class Segment implements StructConverter{
 		return offset;
 	}
 
+	public void setOffset(int offset) {
+		this.offset = offset;
+		this.segmentName = calculateSegment(this.offset);
+	}
+
 	public int getSize() {
 		return size;
 	}
@@ -46,7 +51,7 @@ public class Segment implements StructConverter{
 	private String calculateSegment(int loadAddress) {
 		String result = "";
 		
-		if (loadAddress == Constants.SEGMENT_CODE_BASE) {
+		if (loadAddress == Constants.USER_ROM_CODE_START) {
 			result=".user_rom";
 			this.isCode = true;
 		}
@@ -54,19 +59,20 @@ public class Segment implements StructConverter{
 			result=".user_rom_data";
 			this.isCode = false;
 		}
-		else if(loadAddress <= Constants.USER_ROM_DATA_END) {
+		else if(loadAddress > Constants.USER_ROM_DATA_START && loadAddress <= Constants.USER_ROM_DATA_END) {
 			result=".data";
 			this.isCode = false;
 		}
-		else if(loadAddress > Constants.SEGMENT_CODE_BASE) {
-			result=".code";
+		else if(loadAddress >= Constants.IROM_START && loadAddress < Constants.USER_ROM_CODE_START) {
+			result=".irom";
 			this.isCode = true;
 		}
-		else if(loadAddress >= Constants.SPI_FLASH_START && loadAddress <= Constants.SPI_FLASH_END) {
+		else if(loadAddress >= Constants.SPI_FLASH_START && loadAddress < Constants.SPI_FLASH_END) {
+			result=".spiflash";
 			this.isCode = true;
 		}
 		else {
-			result = "uknown";
+			result = ".uknown";
 			this.isCode = true;
 		}
 			
