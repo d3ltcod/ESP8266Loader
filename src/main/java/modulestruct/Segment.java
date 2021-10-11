@@ -63,12 +63,12 @@ public class Segment implements StructConverter{
 			result=".data";
 			this.isCode = false;
 		}
-		else if(loadAddress >= Constants.IROM_START && loadAddress < Constants.USER_ROM_CODE_START) {
+		else if(loadAddress >= Constants.IROM_START && loadAddress < Constants.IROM_END) {
 			result=".irom";
 			this.isCode = true;
 		}
-		else if(loadAddress >= Constants.SPI_FLASH_START && loadAddress < Constants.SPI_FLASH_END) {
-			result=".spiflash";
+		else if(loadAddress >= Constants.USER_ROM_CODE_START) {
+			result=".user_rom";
 			this.isCode = true;
 		}
 		else {
