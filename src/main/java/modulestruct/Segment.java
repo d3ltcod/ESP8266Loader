@@ -67,10 +67,6 @@ public class Segment implements StructConverter{
 			result=".irom";
 			this.isCode = true;
 		}
-		else if(loadAddress >= Constants.USER_ROM_CODE_START) {
-			result=".user_rom";
-			this.isCode = true;
-		}
 		else {
 			result = ".uknown";
 			this.isCode = true;
