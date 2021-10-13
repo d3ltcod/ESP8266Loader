@@ -134,7 +134,7 @@ public class ESP8266LoaderLoader extends AbstractLibrarySupportLoader {
 		String BLOCK_SOURCE_NAME = "ESP8266 Section";
 		
 		for (Segment segment: image.getSegments()) {
-			Address start = program.getAddressFactory().getDefaultAddressSpace().getAddress(segment.getOffset());
+			Address start = program.getAddressFactory().getDefaultAddressSpace().getAddress(segment.getOffset()+8);
 
 			MemoryBlockUtils.createInitializedBlock(program, false,
 				segment.getSegmentName(), start, reader, segment.getSize(), "", BLOCK_SOURCE_NAME, r, w, x, log, monitor);

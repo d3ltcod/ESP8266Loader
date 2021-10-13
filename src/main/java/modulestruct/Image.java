@@ -42,7 +42,7 @@ public class Image {
 		int iromLength = (int)h2.getIromTextSegmentLength();
 		
 		byte[] content = this.reader.readNextByteArray(iromLength);
-		Segment s = new Segment(Constants.IROM_START, iromLength, content);
+		Segment s = new Segment(Constants.SPI_FLASH_START, iromLength, content);
 		segments.add(s);
 		
 		this.reader.setPointerIndex((0x1000+0x10+iromLength));
