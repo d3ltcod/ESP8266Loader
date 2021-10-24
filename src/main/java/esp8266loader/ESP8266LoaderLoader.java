@@ -86,7 +86,7 @@ public class ESP8266LoaderLoader extends AbstractLibrarySupportLoader {
 		markupHeader(program, image.getHeader(), monitor, provider.getInputStream(0), log);
 		
 		try {
-			markupSections(program, image, monitor, provider.getInputStream(0), log);
+			markupSections(program, image, monitor, provider.getInputStream(image.getInitialPos()), log);
 		} catch (AddressOverflowException | IOException e) {
 			e.printStackTrace();
 		}
@@ -127,14 +127,15 @@ public class ESP8266LoaderLoader extends AbstractLibrarySupportLoader {
 		}
 	}
 	
-	private void markupSections(Program program, Image image, TaskMonitor monitor, InputStream reader, MessageLog log) throws AddressOverflowException {
+	private void markupSections(Program program, Image image, TaskMonitor monitor, InputStream reader, MessageLog log) throws AddressOverflowException, IOException {
 		boolean r = true;
 		boolean w = true;
 		boolean x = true;
 		String BLOCK_SOURCE_NAME = "ESP8266 Section";
 		
 		for (Segment segment: image.getSegments()) {
-			Address start = program.getAddressFactory().getDefaultAddressSpace().getAddress(segment.getOffset()+8);
+			reader.skip(8);
+			Address start = program.getAddressFactory().getDefaultAddressSpace().getAddress(segment.getOffset());
 
 			MemoryBlockUtils.createInitializedBlock(program, false,
 				segment.getSegmentName(), start, reader, segment.getSize(), "", BLOCK_SOURCE_NAME, r, w, x, log, monitor);

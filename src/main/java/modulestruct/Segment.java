@@ -59,13 +59,9 @@ public class Segment implements StructConverter{
 			result=".user_rom_data";
 			this.isCode = false;
 		}
-		else if(loadAddress > Constants.USER_ROM_DATA_START && loadAddress <= Constants.USER_ROM_DATA_END) {
+		else if(loadAddress <= Constants.DATA_END) {
 			result=".data";
 			this.isCode = false;
-		}
-		else if(loadAddress >= Constants.SPI_FLASH_START && loadAddress < Constants.SPI_FLASH_END) {
-			result=".spi";
-			this.isCode = true;
 		}
 		else {
 			result = ".uknown";

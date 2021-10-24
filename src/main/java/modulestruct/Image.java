@@ -12,6 +12,7 @@ public class Image {
 	private int version;
 	private List<Segment> segments = new ArrayList<Segment>();
 	private BinaryReader reader;
+	private long initialPos = 0x1000;
 	
 	public Image(BinaryReader reader) throws IOException {
 		this.reader = reader;
@@ -36,14 +37,11 @@ public class Image {
 	}
 	
 	private void stepsForImageV2() throws IOException {
-		this.reader.setPointerIndex((0x1000));
 		HeaderV2 h2 = readHeaderV2();
 		
 		int iromLength = (int)h2.getIromTextSegmentLength();
 		
-		byte[] content = this.reader.readNextByteArray(iromLength);
-		Segment s = new Segment(Constants.SPI_FLASH_START, iromLength, content);
-		segments.add(s);
+		this.initialPos = (0x1000+0x10+iromLength);
 		
 		this.reader.setPointerIndex((0x1000+0x10+iromLength));
 	}
@@ -90,5 +88,9 @@ public class Image {
 		if(mn == Constants.ESP_MAGIC_BASE_V1) return 1;
 		else if (mn == Constants.ESP_MAGIC_BASE_V2 || mn == Constants.ESP_MAGIC_BASE_V2_2) return 2;
 		else throw new IOException("This is not an ESP8266 file");
+	}
+
+	public long getInitialPos() {
+		return initialPos;
 	}
 }
