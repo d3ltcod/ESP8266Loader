@@ -7,6 +7,7 @@ public class Constants {
 	public final static int USER_ROM_DATA_START = 0x3FFE8000;
 	public final static int DATA_END = 0x3FFFFFFF;
     public final static int USER_ROM_CODE_START = 0x40100000;
+    public final static int IROM_CODE_START = 0x40000000;
     public final static int SPI_FLASH_START = 0x40200000;
 	public final static int SPI_FLASH_END = 0x40300000;
 }

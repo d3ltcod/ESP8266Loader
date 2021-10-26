@@ -28,6 +28,7 @@ import ghidra.app.util.opinion.AbstractLibrarySupportLoader;
 import ghidra.app.util.opinion.LoadSpec;
 import ghidra.framework.model.DomainObject;
 import ghidra.program.model.address.Address;
+import ghidra.program.model.address.AddressOutOfBoundsException;
 import ghidra.program.model.address.AddressOverflowException;
 import ghidra.program.model.lang.LanguageCompilerSpecPair;
 import ghidra.program.model.listing.Program;
@@ -82,7 +83,6 @@ public class ESP8266LoaderLoader extends AbstractLibrarySupportLoader {
 		BinaryReader reader = new BinaryReader(provider, true);
 		Image image = new Image(reader);
 		
-		
 		markupHeader(program, image.getHeader(), monitor, provider.getInputStream(0), log);
 		
 		try {
@@ -91,12 +91,26 @@ public class ESP8266LoaderLoader extends AbstractLibrarySupportLoader {
 			e.printStackTrace();
 		}
 		
+		createSpiAndIromBlock(program, provider, monitor, log);
+		
 		// Create entry point
 		Address entryAddress = program.getAddressFactory().getDefaultAddressSpace().getAddress(image.getHeader().getEntrypoint(), true);
 		program.getSymbolTable().addExternalEntryPoint(entryAddress);
 	} 
 		
 
+	private void createSpiAndIromBlock(Program program, ByteProvider provider, TaskMonitor monitor, MessageLog log) {
+		// Create SPI Flash and irom
+		try {
+			MemoryBlockUtils.createInitializedBlock(program, false, ".spi_flash", program.getAddressFactory().getDefaultAddressSpace().getAddress(Constants.SPI_FLASH_START), 
+					provider.getInputStream(0), Constants.SPI_FLASH_END-Constants.SPI_FLASH_START, "", "ESP8266 Section", true, true, true, log, monitor);
+			
+			MemoryBlockUtils.createInitializedBlock(program, false, ".irom", program.getAddressFactory().getDefaultAddressSpace().getAddress(Constants.IROM_CODE_START), 
+					Constants.USER_ROM_CODE_START-Constants.IROM_CODE_START, "", "ESP8266 Section", true, true, true, log);
+		} catch (AddressOverflowException | AddressOutOfBoundsException | IOException e1) {
+			e1.printStackTrace();
+		}
+	}
 	@Override
 	public List<Option> getDefaultOptions(ByteProvider provider, LoadSpec loadSpec,
 			DomainObject domainObject, boolean isLoadIntoProgram) {
